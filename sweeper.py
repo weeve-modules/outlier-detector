@@ -98,7 +98,7 @@ def output(data):
     # post request
     if __EGRESS_API_METHOD__ == "POST":
         resp = requests.post(
-            url=f"{__EGRESS_API_HOST__}", data=return_body)
+            url=f"{__EGRESS_API_HOST__}", json=return_body)
         #print(f"RETURN_BODY: {return_body}")
         #print(f"THE RESPONSE:{resp} {resp.text}")
     else:
