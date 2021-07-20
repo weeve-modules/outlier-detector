@@ -1,52 +1,130 @@
-# Sweeper
+# Cleaner
 
-| | |
-| --- | ---|
-| version | `v0.0.1` |
-| authors | `Jakub Grzelak`, `Sanyam Arya` |
-| docker image | `weevenetwork/weeve-sweeper` |
-| tech tags | `Python`, `Flask`, `Docker` |
+|                |                                                                                   |
+| -------------- | --------------------------------------------------------------------------------- |
+| Name           | Cleaner                                                                           |
+| Version        | v0.0.1                                                                            |
+| Dockerhub Link | weevenetwork/weeve-sweeper                                                        |
+| authors        | Jakub Grzelak                                                                     |
 
-_Sweeper is a processing module responsible for data sanitization and anomaly detection of data passing through weeve data services._
-_Sweeper checks if received data are within constraints associated with some maximum and minimum acceptance value or change rate._
-_This module is containerized using Docker._
+- [Cleaner](#cleaner)
+  - [Description](#description)
+  - [Features](#features)
+  - [Environment Variables](#environment-variables)
+    - [Module Specific](#module-specific)
+    - [Set by the weeve Agent on the edge-node](#set-by-the-weeve-agent-on-the-edge-node)
+  - [Dependencies](#dependencies)
+  - [Input](#input)
+  - [Output](#output)
+  - [Docker Compose Example](#docker-compose-example)
 
-The following module features must be provided by a developer in a data service designer section on weeve platform:
-* **Upper Threshold** - the value above which data would be considered as anomaly,
-  * type: integer
-* **Lower Threshold** - the value below which data would be considered as anomaly,
-  * type: integer
-* **Anomaly Positive Rate of Change** - anomaly positive rate of change per second,
-  * type: float
-* **Anomaly Negative Rate of Change** - anomaly negative rate of change per second,
-  * type: float
-* **Out of Bound Data** - what to do with out of bound data,
-  * keep - keeps data
-  * remove - removes data
-  * smooth - sets data to the most recent value that satisfied the constraints
-* **Input Label** - the input label on which anomaly is detected,
-  * type: string
-* **Input Unit** - the input unit on which anomaly is detected,
-  * type: string
-* **Output Label** - the output label as which data is dispatched,
-  * type: string
-* **Output Unit** - the output unit in which data is dispatched,
-  * type: string
+## Description
 
-Other features required for establishing the inter-container communication between modules in a data service are set by weeve server.
-These include: egress api host, egress api method, handler host and port.
+Cleaner is a processing module responsible for data sanitization and anomaly detection of data passing through weeve data services.
+Cleaner checks if received data are within constraints associated with some maximum and minimum acceptance value or change rate.
+This module is containerized using Docker.
 
-### Requirements
-Sweeper requires the following Python packages that will be installed on a container built:
-* Flask v1.1.1
-* requests
-* python-decouple v3.4
+## Features
 
-### Output
-Output of this module is JSON body:
+- Detects anomaly by comparing to a rate of change in data values
+- Uses value thresholds to keep, flatten or remove data
+- Flask ReST client
+- Request - sends HTTP Request to the next module
+
+## Environment Variables
+
+### Module Specific
+
+The following module configurations can be provided in a data service designer section on weeve platform:
+
+| Name                              | Environment Variables           | type   | Description                                              |
+| --------------------------------- | ------------------------------- | ------ | -------------------------------------------------------- |
+| Upper Threshold                   | UPPER_THRESHOLD                 | float  | Value above which data would be considered as anomaly    |
+| Lower Threshold                   | LOWER_THRESHOLD                 | float  | Value below which data would be considered as anomaly    |
+| Anomaly Positive Rate of Change   | ANOMALY_POSITIVE_RATE_OF_CHANGE | float  | Anomaly positive rate of change per second               |
+| Anomaly Negative Rate of Change   | ANOMALY_NEGATIVE_RATE_OF_CHANGE | float  | Anomaly negative rate of change per second               |
+| Out of Bound Data                 | OUT-OF-BOUND_DATA               | string | What to do with out of bound data: keep, remove, smooth  |
+| Input Label                       | INPUT_LABEL                     | string | The input label on which anomaly is detected             |
+| Input Unit                        | INPUT_UNIT                      | string | The input unit on which anomaly is detected              |
+| Output Label                      | OUTPUT_LABEL                    | string | The output label as which data is dispatched             |
+| Output Unit                       | OUTPUT_UNIT                     | string | The output unit in which data is dispatched              |
+
+Other features required for establishing the inter-container communication between modules in a data service are set by weeve agent.
+
+### Set by the weeve Agent on the edge-node
+
+| Environment Variables | type   | Description                            |
+| --------------------- | ------ | -------------------------------------- |
+| EGRESS_API_HOST       | string | HTTP ReST endpoint for the next module |
+| MODULE_NAME           | string | Name of the module                     |
+
+## Dependencies
+
+```txt
+Flask==1.1.1
+requests
+python-decouple==3.4
+```
+
+## Input
+
+Input to this module is JSON body single object:
+
+Example:
+
+```node
 {
-    "_OUTPUT_LABEL_": _PROCESSED_DATA_,
-    "input_unit": _OUTPUT_UNIT_,
+  temperature: 15,
+  input_unit: Celsius
 }
+```
 
-where _OUTPUT_LABEL_ and _OUTPUT_UNIT_ are specified at the module creation and _PROCESSED_DATA_ is data processed by Sweeper
+## Output
+
+Output of this module is JSON body array of objects.
+
+Output of this module is JSON body:
+
+```node
+{
+    "<OUTPUT_LABEL>": <Processed data>,
+    "output_unit": <OUTPUT_UNIT>,
+}
+```
+ 
+* Here `OUTPUT_LABEL` and `OUTPUT_UNIT` are specified at the module creation and `Processed data` is data processed by Module Main function.
+
+Example:
+
+```node
+{
+  temperature: 54,
+  output_unit: Celsius,
+}
+```
+
+## Docker Compose Example
+
+```yml
+version: "3"
+services:
+  sweeper:
+    image: weevenetwork/weeve-sweeper
+    environment:
+      MODULE_NAME: sweeper
+      EGRESS_API_HOST: https://hookb.in/pzaBWG9rKoSXNNqwBo3o
+      EGRESS_API_METHOD: "POST"
+      HANDLER_HOST: "0.0.0.0"
+      HANDLER_PORT: "5000"
+      UPPER_THRESHOLD: 100
+      LOWER_THRESHOLD: -10
+      ANOMALY_POSITIVE_RATE_OF_CHANGE: 20
+      ANOMALY_NEGATIVE_RATE_OF_CHANGE: -20
+      OUT-OF-BOUND_DATA: "remove"
+      INPUT_LABEL: "temperature"
+      INPUT_UNIT: "Celsius"
+      OUTPUT_LABEL: "temperature"
+      OUTPUT_UNIT: "Celsius"
+    ports:
+      - 5000:80
+```
