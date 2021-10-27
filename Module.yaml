@@ -1,0 +1,86 @@
+version: 1.0.0
+name: Cleaner
+description: Data Sanitization and Anomaly Detection
+icon: https://icons-020-demo.s3.eu-central-1.amazonaws.com/Sweeper.png
+type: process
+tags:
+  - Cleaner
+  - process
+  - Data
+  - Sanitization
+  - Anomaly
+  - Detection
+categories:
+  - id: category
+    name: Filter
+image:
+  name: weevenetwork/weeve-sweeper
+  tag: latest
+environments:
+  - key: UPPER_THRESHOLD
+    description: The value above which data would be considered as anomaly
+    value: ''
+    default: 1000
+    type: integer
+    name: Upper Threshold
+  - key: LOWER_THRESHOLD
+    description: The value below which data would be considered as anomaly
+    value: ''
+    default: -10
+    type: integer
+    name: Lower Threshold
+  - key: ANOMALY_POSITIVE_RATE_OF_CHANGE
+    description: Anomaly +ve rate of change  (per second)
+    value: ''
+    default: 20
+    type: float
+    name: Anomaly (+ve) rate of change
+  - key: ANOMALY_NEGATIVE_RATE_OF_CHANGE
+    description: Anomaly -ve rate of change  (per second)
+    value: ''
+    default: 20
+    type: float
+    name: Anomaly (-ve) rate of change
+  - key: OUT-OF-BOUND_DATA
+    description: What to do with out of bound data
+    value: ''
+    default: keep
+    type: enum
+    options:
+      - keep
+      - remove
+      - smooth
+    name: Out-of-bound Data
+  - key: INPUT_LABEL
+    description: The input label on which anomaly is detected
+    value: ''
+    default: temperature
+    type: string
+    name: Input Label
+  - key: INPUT_UNIT
+    description: The input unit
+    value: ''
+    default: Celsius
+    type: string
+    name: Input Unit
+  - key: OUTPUT_LABEL
+    description: The out label as which data is dispatched
+    value: ''
+    default: differentialTemperature
+    type: string
+    name: Output Label
+  - key: OUTPUT_UNIT
+    description: The output unit
+    value: ''
+    default: Celsius
+    type: string
+    name: Output Unit
+commands: []
+document:
+  ports: []
+  volumes: []
+  restart_policy:
+    condition: on-failure
+    delay: 10s
+    max_attempts: 3
+    window: 120s
