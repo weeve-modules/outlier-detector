@@ -3,7 +3,7 @@
 |                |                                                                                   |
 | -------------- | --------------------------------------------------------------------------------- |
 | Name           | Cleaner                                                                           |
-| Version        | v0.0.1                                                                            |
+| Version        | v0.0.2                                                                            |
 | Dockerhub Link | weevenetwork/weeve-sweeper                                                        |
 | authors        | Jakub Grzelak                                                                     |
 
@@ -53,10 +53,18 @@ Other features required for establishing the inter-container communication betwe
 
 ### Set by the weeve Agent on the edge-node
 
-| Environment Variables | type   | Description                            |
-| --------------------- | ------ | -------------------------------------- |
-| EGRESS_API_HOST       | string | HTTP ReST endpoint for the next module |
-| MODULE_NAME           | string | Name of the module                     |
+| Environment Variables | type   | Description                                    |
+| --------------------- | ------ | ---------------------------------------------- |
+| MODULE_NAME           | string | Name of the module                             |
+| MODULE_TYPE           | string | Type of the module (INGRESS, PROCESS, EGRESS)  |
+| EGRESS_SCHEME         | string | URL Scheme                                     |
+| EGRESS_HOST           | string | URL target host                                |
+| EGRESS_PORT           | string | URL target port                                |
+| EGRESS_PATH           | string | URL target path                                |
+| EGRESS_URL            | string | HTTP ReST endpoint for the next module         |
+| INGRESS_HOST          | string | Host to which data will be received            |
+| INGRESS_PORT          | string | Port to which data will be received            |
+| INGRESS_PATH          | string | Path to which data will be received            |
 
 ## Dependencies
 
