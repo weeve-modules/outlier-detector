@@ -96,7 +96,7 @@ Output of this module is JSON body:
 ```node
 {
     "<OUTPUT_LABEL>": <Processed data>,
-    "output_unit": <OUTPUT_UNIT>,
+    "unit": <OUTPUT_UNIT>,
 }
 ```
  
@@ -107,7 +107,7 @@ Example:
 ```node
 {
   temperature: 54,
-  output_unit: Celsius,
+  unit: Celsius,
 }
 ```
 
