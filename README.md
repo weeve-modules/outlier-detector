@@ -4,7 +4,7 @@
 | -------------- | --------------------------------------------------------------------------------- |
 | Name           | Cleaner                                                                           |
 | Version        | v0.0.2                                                                            |
-| Dockerhub Link | weevenetwork/weeve-sweeper                                                        |
+| Dockerhub Link | [weevenetwork/weeve-sweeper](https://hub.docker.com/r/weevenetwork/weeve-sweeper)                                                        |
 | authors        | Jakub Grzelak                                                                     |
 
 - [Cleaner](#cleaner)
