@@ -4,7 +4,7 @@
 | -------------- | --------------------------------------------------------------------------------- |
 | Name           | Cleaner                                                                           |
 | Version        | v0.0.2                                                                            |
-| Dockerhub Link | weevenetwork/weeve-sweeper                                                        |
+| Dockerhub Link | [weevenetwork/weeve-sweeper](https://hub.docker.com/r/weevenetwork/weeve-sweeper)                                                        |
 | authors        | Jakub Grzelak                                                                     |
 
 - [Cleaner](#cleaner)
@@ -96,7 +96,7 @@ Output of this module is JSON body:
 ```node
 {
     "<OUTPUT_LABEL>": <Processed data>,
-    "output_unit": <OUTPUT_UNIT>,
+    "unit": <OUTPUT_UNIT>,
 }
 ```
  
@@ -107,7 +107,7 @@ Example:
 ```node
 {
   temperature: 54,
-  output_unit: Celsius,
+  unit: Celsius,
 }
 ```
 
