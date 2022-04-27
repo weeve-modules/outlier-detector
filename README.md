@@ -4,7 +4,7 @@
 | -------------- | --------------------------------------------------------------------------------- |
 | Name           | Cleaner                                                                           |
 | Version        | v0.0.2                                                                            |
-| Dockerhub Link | [weevenetwork/weeve-sweeper](https://hub.docker.com/r/weevenetwork/weeve-sweeper)                                                        |
+| Dockerhub Link | [weevenetwork/cleaner](https://hub.docker.com/r/weevenetwork/cleaner)                                                        |
 | authors        | Jakub Grzelak                                                                     |
 
 - [Cleaner](#cleaner)
@@ -69,7 +69,7 @@ Other features required for establishing the inter-container communication betwe
 ## Dependencies
 
 ```txt
-Flask==1.1.1
+Flask==2.0.3
 requests
 python-decouple==3.4
 ```
@@ -116,11 +116,11 @@ Example:
 ```yml
 version: "3"
 services:
-  sweeper:
-    image: weevenetwork/weeve-sweeper
+  cleaner:
+    image: weevenetwork/cleaner
     environment:
-      MODULE_NAME: sweeper
-      EGRESS_API_HOST: https://hookb.in/pzaBWG9rKoSXNNqwBo3o
+      MODULE_NAME: cleaner
+      EGRESS_API_HOST: https://hookb.in/example
       EGRESS_API_METHOD: "POST"
       HANDLER_HOST: "0.0.0.0"
       HANDLER_PORT: "5000"
