@@ -1,7 +1,7 @@
 version: 1.0.0
 name: Cleaner
 description: Data Sanitization and Anomaly Detection
-icon: https://icons-020-demo.s3.eu-central-1.amazonaws.com/Sweeper.png
+icon: https://icons-020-demo.s3.eu-central-1.amazonaws.com/mi_cleaner_process.png
 type: process
 tags:
   - Cleaner
@@ -14,7 +14,7 @@ categories:
   - id: category
     name: Filter
 image:
-  name: weevenetwork/weeve-sweeper
+  name: weevenetwork/cleaner
   tag: latest
 environments:
   - key: UPPER_THRESHOLD

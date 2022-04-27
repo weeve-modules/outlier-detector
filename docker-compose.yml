@@ -1,11 +1,11 @@
 version: "3"
 services:
-  weeve-sweeper:
+  cleaner:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      EGRESS_API_HOST: https://hookb.in/pzaBWG9rKoSXNNqwBo3o
+      EGRESS_API_HOST: https://hookb.in/example
       EGRESS_API_METHOD: "POST"
       HANDLER_HOST: "0.0.0.0"
       HANDLER_PORT: "5000"

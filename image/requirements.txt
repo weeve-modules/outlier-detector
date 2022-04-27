@@ -1,4 +1,4 @@
-Flask==1.1.1
+Flask==2.0.3
 requests
 python-decouple==3.4
 python-dotenv
