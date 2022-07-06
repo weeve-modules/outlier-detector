@@ -1,35 +1,26 @@
 # Cleaner
 
-|                |                                                                                   |
-| -------------- | --------------------------------------------------------------------------------- |
-| Name           | Cleaner                                                                           |
-| Version        | v0.0.2                                                                            |
-| Dockerhub Link | [weevenetwork/cleaner](https://hub.docker.com/r/weevenetwork/cleaner)                                                        |
-| authors        | Jakub Grzelak                                                                     |
+|                |                                       |
+| -------------- | ------------------------------------- |
+| Name           | Cleaner                               |
+| Version        | v1.0.0                                |
+| Dockerhub Link | [weevenetwork/cleaner](https://hub.docker.com/r/weevenetwork/cleaner) |
+| authors        | Jakub Grzelak                    |
 
 - [Cleaner](#cleaner)
   - [Description](#description)
-  - [Features](#features)
   - [Environment Variables](#environment-variables)
     - [Module Specific](#module-specific)
     - [Set by the weeve Agent on the edge-node](#set-by-the-weeve-agent-on-the-edge-node)
   - [Dependencies](#dependencies)
   - [Input](#input)
   - [Output](#output)
-  - [Docker Compose Example](#docker-compose-example)
 
 ## Description
 
 Cleaner is a processing module responsible for data sanitization and anomaly detection of data passing through weeve data services.
 Cleaner checks if received data are within constraints associated with some maximum and minimum acceptance value or change rate.
 This module is containerized using Docker.
-
-## Features
-
-- Detects anomaly by comparing to a rate of change in data values
-- Uses value thresholds to keep, flatten or remove data
-- Flask ReST client
-- Request - sends HTTP Request to the next module
 
 ## Environment Variables
 
@@ -45,94 +36,77 @@ The following module configurations can be provided in a data service designer s
 | Anomaly Negative Rate of Change   | ANOMALY_NEGATIVE_RATE_OF_CHANGE | float  | Anomaly negative rate of change per second               |
 | Out of Bound Data                 | OUT-OF-BOUND_DATA               | string | What to do with out of bound data: keep, remove, smooth  |
 | Input Label                       | INPUT_LABEL                     | string | The input label on which anomaly is detected             |
-| Input Unit                        | INPUT_UNIT                      | string | The input unit on which anomaly is detected              |
-| Output Label                      | OUTPUT_LABEL                    | string | The output label as which data is dispatched             |
-| Output Unit                       | OUTPUT_UNIT                     | string | The output unit in which data is dispatched              |
-
-Other features required for establishing the inter-container communication between modules in a data service are set by weeve agent.
 
 ### Set by the weeve Agent on the edge-node
+
+Other features required for establishing the inter-container communication between modules in a data service are set by weeve agent.
 
 | Environment Variables | type   | Description                                    |
 | --------------------- | ------ | ---------------------------------------------- |
 | MODULE_NAME           | string | Name of the module                             |
-| MODULE_TYPE           | string | Type of the module (INGRESS, PROCESS, EGRESS)  |
-| EGRESS_SCHEME         | string | URL Scheme                                     |
-| EGRESS_HOST           | string | URL target host                                |
-| EGRESS_PORT           | string | URL target port                                |
-| EGRESS_PATH           | string | URL target path                                |
-| EGRESS_URL            | string | HTTP ReST endpoint for the next module         |
+| MODULE_TYPE           | string | Type of the module (Input, Processing, Output)  |
+| LOG_LEVEL             | string | Level of logging (DEBUG, INFO, WARNING, ERROR, CRITICAL) |
+| EGRESS_URLS           | string | HTTP ReST endpoints for the next modules         |
 | INGRESS_HOST          | string | Host to which data will be received            |
 | INGRESS_PORT          | string | Port to which data will be received            |
-| INGRESS_PATH          | string | Path to which data will be received            |
+
+## Module Testing
+
+To test module navigate to `test` directory. In `test/assets` edit both .json file to provide input for the module and expected output. During a test, data received from the listeners are compared against expected output data. You can run tests with `make run_test`.
 
 ## Dependencies
 
 ```txt
-Flask==2.0.3
+bottle
 requests
-python-decouple==3.4
 ```
 
 ## Input
 
-Input to this module is JSON body single object:
+Input to this module is:
 
-Example:
+* JSON body single object, example:
 
-```node
+```json
 {
-  temperature: 15,
-  input_unit: Celsius
+    "temperature": 15,
 }
+```
+
+* array of JSON body objects, example:
+
+```json
+[
+    {
+        "temperature": 15,
+    },
+    {
+        "temperature": 17,
+    }
+]
 ```
 
 ## Output
 
-Output of this module is JSON body array of objects.
+Output of this module is as follows and depending on cleaning settings.
 
-Output of this module is JSON body:
+* JSON body single object, example:
 
-```node
+```json
 {
-    "<OUTPUT_LABEL>": <Processed data>,
-    "unit": <OUTPUT_UNIT>,
-}
-```
- 
-* Here `OUTPUT_LABEL` and `OUTPUT_UNIT` are specified at the module creation and `Processed data` is data processed by Module Main function.
-
-Example:
-
-```node
-{
-  temperature: 54,
-  unit: Celsius,
+    "temperature": 15,
 }
 ```
 
-## Docker Compose Example
+* array of JSON body objects, example:
 
-```yml
-version: "3"
-services:
-  cleaner:
-    image: weevenetwork/cleaner
-    environment:
-      MODULE_NAME: cleaner
-      EGRESS_API_HOST: https://hookb.in/example
-      EGRESS_API_METHOD: "POST"
-      HANDLER_HOST: "0.0.0.0"
-      HANDLER_PORT: "5000"
-      UPPER_THRESHOLD: 100
-      LOWER_THRESHOLD: -10
-      ANOMALY_POSITIVE_RATE_OF_CHANGE: 20
-      ANOMALY_NEGATIVE_RATE_OF_CHANGE: -20
-      OUT-OF-BOUND_DATA: "remove"
-      INPUT_LABEL: "temperature"
-      INPUT_UNIT: "Celsius"
-      OUTPUT_LABEL: "temperature"
-      OUTPUT_UNIT: "Celsius"
-    ports:
-      - 5000:80
+```json
+[
+    {
+        "temperature": 15,
+    },
+    {
+        "temperature": 17,
+    }
+]
 ```

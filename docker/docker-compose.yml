@@ -1,0 +1,20 @@
+version: "3.0"
+services:
+  cleaner:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    environment:
+      MODULE_NAME: "cleaner"
+      MODULE_TYPE: "Processing"
+      INGRESS_HOST: "0.0.0.0"
+      INGRESS_PORT: "80"
+      EGRESS_URLS: "https://testdockercompose.free.beeceptor.com"
+      UPPER_THRESHOLD: 1000
+      LOWER_THRESHOLD: -10
+      ANOMALY_POSITIVE_RATE_OF_CHANGE: 20
+      ANOMALY_NEGATIVE_RATE_OF_CHANGE: -10
+      OUT-OF-BOUND_DATA: "keep"
+      INPUT_LABEL: "temperature"
+    ports:
+      - 80:80
