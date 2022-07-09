@@ -3,7 +3,7 @@
 |                |                                                                                   |
 | -------------- | --------------------------------------------------------------------------------- |
 | Name           | Cleaner                                                                           |
-| Version        | v0.0.2                                                                            |
+| Version        | v0.0.1                                                                            |
 | Dockerhub Link | [weevenetwork/cleaner](https://hub.docker.com/r/weevenetwork/cleaner)                                                        |
 | authors        | Jakub Grzelak                                                                     |
 
