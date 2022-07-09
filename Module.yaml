@@ -1,4 +1,4 @@
-version: 1.0.0
+version: 0.0.1
 name: Cleaner
 description: Data Sanitization and Anomaly Detection
 icon: https://icons-020-demo.s3.eu-central-1.amazonaws.com/mi_cleaner_process.png
