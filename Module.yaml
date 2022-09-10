@@ -58,7 +58,11 @@ envs:                                   # Array of environment variables that wi
     options: []
     dependencies: []
 ports: []
+envPorts: []
 mounts: []
+envMounts: []
+devices: []
+envDevices: []
 tags:                                   # Array of tags.
   - 'Python'
   - 'Processing'
