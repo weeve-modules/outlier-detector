@@ -16,6 +16,7 @@ prev_data = 0
 prev_time = time.time()
 first_data = True
 
+
 def module_main(received_data: any) -> [any, str]:
     """
     Process received data by implementing module's main logic.
@@ -50,35 +51,52 @@ def module_main(received_data: any) -> [any, str]:
     except Exception as e:
         return None, f"Exception in the module business logic: {e}"
 
+
 def analytics(data, data_time):
     global prev_data
     global prev_time
     global first_data
 
     if type(prev_data) == dict:
-        rate_change = (data[PARAMS['INPUT_LABEL']] - prev_data[PARAMS['INPUT_LABEL']]) / (data_time - prev_time + 10e-8)
+        rate_change = (
+            data[PARAMS["INPUT_LABEL"]] - prev_data[PARAMS["INPUT_LABEL"]]
+        ) / (data_time - prev_time + 10e-8)
     else:
-        rate_change = (data[PARAMS['INPUT_LABEL']] - prev_data) / (data_time - prev_time + 10e-8)
+        rate_change = (data[PARAMS["INPUT_LABEL"]] - prev_data) / (
+            data_time - prev_time + 10e-8
+        )
 
     # if the first data received
-    if first_data and PARAMS['LOWER_THRESHOLD'] <= data[PARAMS['INPUT_LABEL']] <= PARAMS['UPPER_THRESHOLD']:
+    if (
+        first_data
+        and PARAMS["LOWER_THRESHOLD"]
+        <= data[PARAMS["INPUT_LABEL"]]
+        <= PARAMS["UPPER_THRESHOLD"]
+    ):
         first_data = False
         prev_data = data
         prev_time = data_time
         return data
-    elif PARAMS['LOWER_THRESHOLD'] <= data[PARAMS['INPUT_LABEL']] <= PARAMS['UPPER_THRESHOLD'] and PARAMS['ANOMALY_NEGATIVE_RATE_OF_CHANGE'] <= rate_change <= PARAMS['ANOMALY_POSITIVE_RATE_OF_CHANGE']:
+    elif (
+        PARAMS["LOWER_THRESHOLD"]
+        <= data[PARAMS["INPUT_LABEL"]]
+        <= PARAMS["UPPER_THRESHOLD"]
+        and PARAMS["RATE_OF_CHANGE_LOWER_THRESHOLD"]
+        <= rate_change
+        <= PARAMS["RATE_OF_CHANGE_UPPER_THRESHOLD"]
+    ):
         # not anomalous
         prev_data = data
         prev_time = data_time
         return data
     else:
         # anomalous
-        if PARAMS['OUT-OF-BOUND_DATA'] == 'keep':
+        if PARAMS["OUTLIER_POLICY"] == "keep":
             prev_data = data
             prev_time = data_time
             return data
-        elif PARAMS['OUT-OF-BOUND_DATA'] == 'smooth':
+        elif PARAMS["OUTLIER_POLICY"] == "smooth":
             prev_time = data_time
             return prev_data
-        elif PARAMS['OUT-OF-BOUND_DATA'] == 'remove':
+        elif PARAMS["OUTLIER_POLICY"] == "remove":
             return None

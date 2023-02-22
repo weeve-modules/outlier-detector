@@ -1,48 +1,48 @@
-displayName: 'Cleaner'       # Display name for the module that will be displayed in the UI.
+displayName: 'Outlier Detector'       # Display name for the module that will be displayed in the UI.
 moduleName: 'cleaner'        # Module name that will be used to reference the module, and uniquely identify the module and their versions.
-description: 'Data Sanitization and Anomaly Detection.'       # Module description that will be displayed in the UI.
-versionName: 'v1.0.0'                    # Module version name that will be used to reference the module version, and uniquely identify the module version with a common name.
+description: 'Outlier detection and removal. The following parameters can be specified to filter the outliers out.'       # Module description that will be displayed in the UI.
+versionName: 'v2.0.0'                    # Module version name that will be used to reference the module version, and uniquely identify the module version with a common name.
 isPublic: true                          # Boolean value that indicates if the module is Public or Private.
 categories:                             # Array of category that will be used to group the module in the UI.
   - 'Filter'
 type: 'Processing'      # Module type (Input, Processing, Output) that will be used to group the module in the UI.
 image:
   name: 'weevenetwork/cleaner'     # Image name from the docker registry.
-  tag: 'v1.0.0'                               # Image tag from the docker registry.
+  tag: 'v2.0.0'                               # Image tag from the docker registry.
   homepage: 'https://hub.docker.com/r/weevenetwork/cleaner'      # Image homepage from the docker registry.
 repository: 'https://github.com/weeve-modules/cleaner'     # Repository URL to source code.
 envs:                                   # Array of environment variables that will be used to configure the module. Also used to show related fields on the UI.
   - name: Upper Threshold                   # name of the field to be displayed on the UI.
     key: UPPER_THRESHOLD                # key to set in the environment variables.
-    description: The value above which data would be considered as anomaly.     # Description/helper text for the field.
+    description: Any data points exceeding this threshold should be considered outliers.     # Description/helper text for the field.
     value: '100'                         # Value to be set in the environment variables.
     type: 'number'                    # Type of the field. Possible values are: ['text', 'select', 'boolean', 'date', 'time', 'dateTime-local', 'number', 'multiple', 'CSV', 'file']
     options: []
     dependencies: []
   - name: Lower Threshold
     key: LOWER_THRESHOLD
-    description: The value below which data would be considered as anomaly.
+    description: Any data points below this threshold should be considered outliers.
     value: '-10'
     type: 'number'
     options: []
     dependencies: []
-  - name: Anomaly positive rate of change
-    key: ANOMALY_POSITIVE_RATE_OF_CHANGE
-    description: Anomaly positive rate of change (per second).
+  - name: Rate of Change (Upper Threshold)
+    key: RATE_OF_CHANGE_UPPER_THRESHOLD
+    description: Any data point where the rate of change (per second) is greater than this value should be considered an outlier.
     value: '20'
     type: 'number'
     options: []
     dependencies: []
-  - name: Anomaly negative rate of change
-    key: ANOMALY_NEGATIVE_RATE_OF_CHANGE
-    description: Anomaly negative rate of change (per second).
+  - name: Rate of Change (Lower Threshold)
+    key: RATE_OF_CHANGE_LOWER_THRESHOLD
+    description: Any data point where the rate of change (per second) is less than this value should be considered an outlier.
     value: '20'
     type: 'number'
     options: []
     dependencies: []
-  - name: Out-of-bound Data
-    key: OUT-OF-BOUND_DATA
-    description: What to do with out of bound data.
+  - name: Outlier Policy
+    key: OUTLIER_POLICY
+    description: What to do with outliers.
     value: 'keep'
     type: 'select'
     options:
@@ -52,7 +52,7 @@ envs:                                   # Array of environment variables that wi
     dependencies: []
   - name: Input Label
     key: INPUT_LABEL
-    description: The input label on which anomaly is detected.
+    description: The input label on which to detect outliers.
     value: 'temperature'
     type: 'text'
     options: []

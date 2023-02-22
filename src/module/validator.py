@@ -32,11 +32,11 @@ def data_validation(data: any) -> str:
             return f"Detected type: {type(data)} | Supported types: {allowed_data_types} | invalid!"
 
         # check if data contains required label
-        if type(data) == dict and not PARAMS['INPUT_LABEL'] in data:
+        if type(data) == dict and not PARAMS["INPUT_LABEL"] in data:
             return f"Data does not contain required label: {PARAMS['INPUT_LABEL']}"
         elif type(data) == list:
             for item in data:
-                if not PARAMS['INPUT_LABEL'] in item:
+                if not PARAMS["INPUT_LABEL"] in item:
                     return f"Some data does not contain required label: {PARAMS['INPUT_LABEL']}"
 
         return None

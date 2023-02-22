@@ -12,9 +12,9 @@ services:
       EGRESS_URLS: "https://testdockercompose.free.beeceptor.com"
       UPPER_THRESHOLD: 1000
       LOWER_THRESHOLD: -10
-      ANOMALY_POSITIVE_RATE_OF_CHANGE: 20
-      ANOMALY_NEGATIVE_RATE_OF_CHANGE: -10
-      OUT-OF-BOUND_DATA: "keep"
+      RATE_OF_CHANGE_UPPER_THRESHOLD: 20
+      RATE_OF_CHANGE_LOWER_THRESHOLD: -10
+      OUTLIER_POLICY: "keep"
       INPUT_LABEL: "temperature"
     ports:
       - 80:80
