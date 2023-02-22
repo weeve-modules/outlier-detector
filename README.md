@@ -21,7 +21,8 @@
 
 Outlier Detector is a processing module responsible for data sanitization and anomaly detection of data passing through weeve data services.
 Outlier Detector checks if received data are within constraints associated with some maximum and minimum acceptance value or change rate.
-This module is containerized using Docker.
+If the data are outside of the constraints, the module can either remove them, smooth them or keep them.
+The filter parameters are optional. If they are not provided, the module will not perform any filtering.
 
 ## Environment Variables
 
@@ -36,7 +37,8 @@ The following module configurations can be provided in a data service designer s
 | RATE_OF_CHANGE_UPPER_THRESHOLD | float  | Any data point where the rate of change (per second) is greater than this value should be considered an outlier. |
 | RATE_OF_CHANGE_LOWER_THRESHOLD | float  | Any data point where the rate of change (per second) is less than this value should be considered an outlier.    |
 | OUTLIER_POLICY                 | string | What to do with outliers: keep, remove, smooth                                                                   |
-| INPUT_LABEL                    | string | The input label on which to detect outliers.                                                                     |
+| INPUT_DATA_LABEL               | string | The input label on which to detect outliers.                                                                     |
+| INPUT_TIME_LABEL               | string | JSON key for the timestamp. The timestamp should in epoch format (int).                                          |
 
 ### Set by the weeve Agent on the edge-node
 
@@ -71,20 +73,8 @@ Input to this module is:
 ```json
 {
     "temperature": 15,
+    "timestamp": 1234567890
 }
-```
-
-* array of JSON body objects, example:
-
-```json
-[
-    {
-        "temperature": 15,
-    },
-    {
-        "temperature": 17,
-    }
-]
 ```
 
 ## Output
@@ -96,18 +86,6 @@ Output of this module is as follows and depending on cleaning settings.
 ```json
 {
     "temperature": 15,
+    "timestamp": 1234567890
 }
-```
-
-* array of JSON body objects, example:
-
-```json
-[
-    {
-        "temperature": 15,
-    },
-    {
-        "temperature": 17,
-    }
-]
 ```

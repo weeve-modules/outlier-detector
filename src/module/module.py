@@ -12,9 +12,8 @@ import time
 
 log = getLogger("module")
 
-prev_data = 0
-prev_time = time.time()
-first_data = True
+prev_data = None
+prev_time = None
 
 
 def module_main(received_data: any) -> [any, str]:
@@ -34,69 +33,56 @@ def module_main(received_data: any) -> [any, str]:
     log.debug("Processing ...")
 
     try:
+        global prev_data
         global prev_time
 
-        # receive data timestamp
-        data_time = time.time()
+        data = received_data[PARAMS["INPUT_DATA_LABEL"]]
+        timestamp = int(received_data[PARAMS["INPUT_TIME_LABEL"]])
 
-        if type(received_data) == dict:
-            processed_data = analytics(received_data, data_time)
-        elif type(received_data) == list:
-            processed_data = []
-            for item in received_data:
-                processed_data.append(analytics(item, data_time))
-
-        return processed_data, None
+        if is_outlier(data, timestamp):
+            if PARAMS["OUTLIER_POLICY"] == "keep":
+                prev_data = data
+                prev_time = timestamp
+                return received_data, None
+            elif PARAMS["OUTLIER_POLICY"] == "smooth":
+                prev_time = timestamp
+                received_data[PARAMS["INPUT_DATA_LABEL"]] = prev_data
+                return received_data, None
+            elif PARAMS["OUTLIER_POLICY"] == "remove":
+                return None, None
+        else:
+            prev_data = data
+            prev_time = timestamp
+            return received_data, None
 
     except Exception as e:
         return None, f"Exception in the module business logic: {e}"
 
 
-def analytics(data, data_time):
-    global prev_data
-    global prev_time
-    global first_data
-
-    if type(prev_data) == dict:
-        rate_change = (
-            data[PARAMS["INPUT_LABEL"]] - prev_data[PARAMS["INPUT_LABEL"]]
-        ) / (data_time - prev_time + 10e-8)
-    else:
-        rate_change = (data[PARAMS["INPUT_LABEL"]] - prev_data) / (
-            data_time - prev_time + 10e-8
-        )
-
-    # if the first data received
+def is_outlier(data, timestamp):
     if (
-        first_data
-        and PARAMS["LOWER_THRESHOLD"]
-        <= data[PARAMS["INPUT_LABEL"]]
-        <= PARAMS["UPPER_THRESHOLD"]
-    ):
-        first_data = False
-        prev_data = data
-        prev_time = data_time
-        return data
-    elif (
-        PARAMS["LOWER_THRESHOLD"]
-        <= data[PARAMS["INPUT_LABEL"]]
-        <= PARAMS["UPPER_THRESHOLD"]
-        and PARAMS["RATE_OF_CHANGE_LOWER_THRESHOLD"]
-        <= rate_change
-        <= PARAMS["RATE_OF_CHANGE_UPPER_THRESHOLD"]
-    ):
-        # not anomalous
-        prev_data = data
-        prev_time = data_time
-        return data
-    else:
-        # anomalous
-        if PARAMS["OUTLIER_POLICY"] == "keep":
-            prev_data = data
-            prev_time = data_time
-            return data
-        elif PARAMS["OUTLIER_POLICY"] == "smooth":
-            prev_time = data_time
-            return prev_data
-        elif PARAMS["OUTLIER_POLICY"] == "remove":
-            return None
+        prev_data is None or prev_time is None
+    ):  # first data or all previous data were outliers
+        if PARAMS["LOWER_THRESHOLD"] is not None:
+            if data < PARAMS["LOWER_THRESHOLD"]:
+                return True
+        if PARAMS["UPPER_THRESHOLD"] is not None:
+            if data > PARAMS["UPPER_THRESHOLD"]:
+                return True
+
+        return False
+
+    rate_change = (data - prev_data) / (timestamp - prev_time + 10e-8)
+
+    if PARAMS["LOWER_THRESHOLD"] is not None:
+        if data < PARAMS["LOWER_THRESHOLD"]:
+            return True
+    if PARAMS["UPPER_THRESHOLD"] is not None:
+        if data > PARAMS["UPPER_THRESHOLD"]:
+            return True
+    if PARAMS["RATE_OF_CHANGE_LOWER_THRESHOLD"] is not None:
+        if rate_change < PARAMS["RATE_OF_CHANGE_LOWER_THRESHOLD"]:
+            return True
+    if PARAMS["RATE_OF_CHANGE_UPPER_THRESHOLD"] is not None:
+        if rate_change > PARAMS["RATE_OF_CHANGE_UPPER_THRESHOLD"]:
+            return True

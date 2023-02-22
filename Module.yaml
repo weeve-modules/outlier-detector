@@ -1,6 +1,6 @@
 displayName: 'Outlier Detector'       # Display name for the module that will be displayed in the UI.
 moduleName: 'cleaner'        # Module name that will be used to reference the module, and uniquely identify the module and their versions.
-description: 'Outlier detection and removal. The following parameters can be specified to filter the outliers out.'       # Module description that will be displayed in the UI.
+description: 'Outlier detection and removal. The following parameters can be (optionally) specified to filter the outliers out.'       # Module description that will be displayed in the UI.
 versionName: 'v2.0.0'                    # Module version name that will be used to reference the module version, and uniquely identify the module version with a common name.
 isPublic: true                          # Boolean value that indicates if the module is Public or Private.
 categories:                             # Array of category that will be used to group the module in the UI.
@@ -50,10 +50,17 @@ envs:                                   # Array of environment variables that wi
       - remove
       - smooth
     dependencies: []
-  - name: Input Label
-    key: INPUT_LABEL
-    description: The input label on which to detect outliers.
+  - name: Input Data Label
+    key: INPUT_DATA_LABEL
+    description: JSON key on which to detect outliers.
     value: 'temperature'
+    type: 'text'
+    options: []
+    dependencies: []
+  - name: Input Time Label
+    key: INPUT_TIME_LABEL
+    description: JSON key for the timestamp. The timestamp should in epoch format (int).
+    value: 'timestamp'
     type: 'text'
     options: []
     dependencies: []
