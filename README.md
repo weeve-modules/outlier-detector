@@ -4,7 +4,7 @@
 | -------------- | --------------------------------------------------------------------- |
 | Name           | Outlier Detector                                                      |
 | Version        | v2.0.0                                                                |
-| Dockerhub Link | [weevenetwork/cleaner](https://hub.docker.com/r/weevenetwork/cleaner) |
+| Dockerhub Link | [weevenetwork/outlier-detector](https://hub.docker.com/r/weevenetwork/outlier-detector) |
 | authors        | Jakub Grzelak                                                         |
 
 - [Outlier Detector](#outlier-detector)

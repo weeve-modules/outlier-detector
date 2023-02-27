@@ -1,11 +1,11 @@
 version: "3.0"
 services:
-  cleaner:
+  outlier-detector:
     build:
       context: ../
       dockerfile: docker/Dockerfile
     environment:
-      MODULE_NAME: "cleaner"
+      MODULE_NAME: "outlier-detector"
       MODULE_TYPE: "Processing"
       INGRESS_HOST: "0.0.0.0"
       INGRESS_PORT: "80"

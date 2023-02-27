@@ -1,6 +1,6 @@
 SHELL := /bin/bash # to enable source command in run_app
 
-MODULE=weevenetwork/cleaner
+MODULE=weevenetwork/outlier-detector
 VERSION_NAME=v2.0.0
 
 install_dev:

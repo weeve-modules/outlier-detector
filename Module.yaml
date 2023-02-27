@@ -1,5 +1,5 @@
 displayName: 'Outlier Detector'       # Display name for the module that will be displayed in the UI.
-moduleName: 'cleaner'        # Module name that will be used to reference the module, and uniquely identify the module and their versions.
+moduleName: 'outlier-detector'        # Module name that will be used to reference the module, and uniquely identify the module and their versions.
 description: 'Outlier detection and removal. The following parameters can be (optionally) specified to filter the outliers out.'       # Module description that will be displayed in the UI.
 versionName: 'v2.0.0'                    # Module version name that will be used to reference the module version, and uniquely identify the module version with a common name.
 isPublic: true                          # Boolean value that indicates if the module is Public or Private.
@@ -7,10 +7,10 @@ categories:                             # Array of category that will be used to
   - 'Filter'
 type: 'Processing'      # Module type (Input, Processing, Output) that will be used to group the module in the UI.
 image:
-  name: 'weevenetwork/cleaner'     # Image name from the docker registry.
+  name: 'weevenetwork/outlier-detector'     # Image name from the docker registry.
   tag: 'v2.0.0'                               # Image tag from the docker registry.
-  homepage: 'https://hub.docker.com/r/weevenetwork/cleaner'      # Image homepage from the docker registry.
-repository: 'https://github.com/weeve-modules/cleaner'     # Repository URL to source code.
+  homepage: 'https://hub.docker.com/r/weevenetwork/outlier-detector'      # Image homepage from the docker registry.
+repository: 'https://github.com/weeve-modules/outlier-detector'     # Repository URL to source code.
 envs:                                   # Array of environment variables that will be used to configure the module. Also used to show related fields on the UI.
   - name: Upper Threshold                   # name of the field to be displayed on the UI.
     key: UPPER_THRESHOLD                # key to set in the environment variables.
@@ -73,7 +73,7 @@ envDevices: []
 tags:                                   # Array of tags.
   - 'Python'
   - 'Processing'
-  - 'cleaner'
+  - 'outlier-detector'
   - 'process'
   - 'Data'
   - 'Sanitization'
