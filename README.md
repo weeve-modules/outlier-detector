@@ -1,26 +1,28 @@
-# Cleaner
+# Outlier Detector
 
-|                |                                       |
-| -------------- | ------------------------------------- |
-| Name           | Cleaner                               |
-| Version        | v1.0.0                                |
-| Dockerhub Link | [weevenetwork/cleaner](https://hub.docker.com/r/weevenetwork/cleaner) |
-| authors        | Jakub Grzelak                    |
+|                |                                                                       |
+| -------------- | --------------------------------------------------------------------- |
+| Name           | Outlier Detector                                                      |
+| Version        | v2.0.0                                                                |
+| Dockerhub Link | [weevenetwork/outlier-detector](https://hub.docker.com/r/weevenetwork/outlier-detector) |
+| authors        | Jakub Grzelak                                                         |
 
-- [Cleaner](#cleaner)
+- [Outlier Detector](#outlier-detector)
   - [Description](#description)
   - [Environment Variables](#environment-variables)
     - [Module Specific](#module-specific)
     - [Set by the weeve Agent on the edge-node](#set-by-the-weeve-agent-on-the-edge-node)
+  - [Module Testing](#module-testing)
   - [Dependencies](#dependencies)
   - [Input](#input)
   - [Output](#output)
 
 ## Description
 
-Cleaner is a processing module responsible for data sanitization and anomaly detection of data passing through weeve data services.
-Cleaner checks if received data are within constraints associated with some maximum and minimum acceptance value or change rate.
-This module is containerized using Docker.
+Outlier Detector is a processing module responsible for data sanitization and anomaly detection of data passing through weeve data services.
+Outlier Detector checks if received data are within constraints associated with some maximum and minimum acceptance value or change rate.
+If the data are outside of the constraints, the module can either remove them, smooth them or keep them.
+The filter parameters are optional. If they are not provided, the module will not perform any filtering.
 
 ## Environment Variables
 
@@ -28,27 +30,28 @@ This module is containerized using Docker.
 
 The following module configurations can be provided in a data service designer section on weeve platform:
 
-| Name                              | Environment Variables           | type   | Description                                              |
-| --------------------------------- | ------------------------------- | ------ | -------------------------------------------------------- |
-| Upper Threshold                   | UPPER_THRESHOLD                 | float  | Value above which data would be considered as anomaly    |
-| Lower Threshold                   | LOWER_THRESHOLD                 | float  | Value below which data would be considered as anomaly    |
-| Anomaly Positive Rate of Change   | ANOMALY_POSITIVE_RATE_OF_CHANGE | float  | Anomaly positive rate of change per second               |
-| Anomaly Negative Rate of Change   | ANOMALY_NEGATIVE_RATE_OF_CHANGE | float  | Anomaly negative rate of change per second               |
-| Out of Bound Data                 | OUT-OF-BOUND_DATA               | string | What to do with out of bound data: keep, remove, smooth  |
-| Input Label                       | INPUT_LABEL                     | string | The input label on which anomaly is detected             |
+| Environment Variables          | type   | Description                                                                                                      |
+| ------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------- |
+| UPPER_THRESHOLD                | float  | Any data points exceeding this threshold should be considered outliers.                                          |
+| LOWER_THRESHOLD                | float  | Any data points below this threshold should be considered outliers.                                              |
+| RATE_OF_CHANGE_UPPER_THRESHOLD | float  | Any data point where the rate of change (per second) is greater than this value should be considered an outlier. |
+| RATE_OF_CHANGE_LOWER_THRESHOLD | float  | Any data point where the rate of change (per second) is less than this value should be considered an outlier.    |
+| OUTLIER_POLICY                 | string | What to do with outliers: keep, remove, smooth                                                                   |
+| INPUT_DATA_LABEL               | string | The input label on which to detect outliers.                                                                     |
+| INPUT_TIME_LABEL               | string | JSON key for the timestamp. The timestamp should in epoch format (int).                                          |
 
 ### Set by the weeve Agent on the edge-node
 
 Other features required for establishing the inter-container communication between modules in a data service are set by weeve agent.
 
-| Environment Variables | type   | Description                                    |
-| --------------------- | ------ | ---------------------------------------------- |
-| MODULE_NAME           | string | Name of the module                             |
-| MODULE_TYPE           | string | Type of the module (Input, Processing, Output)  |
+| Environment Variables | type   | Description                                              |
+| --------------------- | ------ | -------------------------------------------------------- |
+| MODULE_NAME           | string | Name of the module                                       |
+| MODULE_TYPE           | string | Type of the module (Input, Processing, Output)           |
 | LOG_LEVEL             | string | Level of logging (DEBUG, INFO, WARNING, ERROR, CRITICAL) |
-| EGRESS_URLS           | string | HTTP ReST endpoints for the next modules         |
-| INGRESS_HOST          | string | Host to which data will be received            |
-| INGRESS_PORT          | string | Port to which data will be received            |
+| EGRESS_URLS           | string | HTTP ReST endpoints for the next modules                 |
+| INGRESS_HOST          | string | Host to which data will be received                      |
+| INGRESS_PORT          | string | Port to which data will be received                      |
 
 ## Module Testing
 
@@ -70,20 +73,8 @@ Input to this module is:
 ```json
 {
     "temperature": 15,
+    "timestamp": 1234567890
 }
-```
-
-* array of JSON body objects, example:
-
-```json
-[
-    {
-        "temperature": 15,
-    },
-    {
-        "temperature": 17,
-    }
-]
 ```
 
 ## Output
@@ -95,18 +86,6 @@ Output of this module is as follows and depending on cleaning settings.
 ```json
 {
     "temperature": 15,
+    "timestamp": 1234567890
 }
-```
-
-* array of JSON body objects, example:
-
-```json
-[
-    {
-        "temperature": 15,
-    },
-    {
-        "temperature": 17,
-    }
-]
 ```

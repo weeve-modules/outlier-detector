@@ -4,8 +4,8 @@ networks:
     name: boilerplate_network
 services:
 
-  boilerplate:
-    # image: weevenetwork/boilerplate
+  outlier-detector:
+    # image: weevenetwork/outlier-detector
     build:
       context: ../
       dockerfile: docker/Dockerfile

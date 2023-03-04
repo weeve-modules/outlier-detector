@@ -1,3 +1,4 @@
 {
-    "temperature": -20
+    "temperature": -20,
+    "timestamp": 12345
 }

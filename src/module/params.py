@@ -5,10 +5,11 @@ All parameters specific to the application
 from os import getenv
 
 PARAMS = {
-    "UPPER_THRESHOLD": float(getenv("UPPER_THRESHOLD", 10)),
-    "LOWER_THRESHOLD": float(getenv("LOWER_THRESHOLD", -10)),
-    "ANOMALY_POSITIVE_RATE_OF_CHANGE": float(getenv("ANOMALY_POSITIVE_RATE_OF_CHANGE", 20)),
-    "ANOMALY_NEGATIVE_RATE_OF_CHANGE": float(getenv("ANOMALY_NEGATIVE_RATE_OF_CHANGE", -20)),
-    "OUT-OF-BOUND_DATA": getenv("OUT-OF-BOUND_DATA", "remove"),
-    "INPUT_LABEL": getenv("INPUT_LABEL", "temperature")
+    "UPPER_THRESHOLD": None if getenv("UPPER_THRESHOLD") is None else float(getenv("UPPER_THRESHOLD")),
+    "LOWER_THRESHOLD": None if getenv("LOWER_THRESHOLD") is None else float(getenv("LOWER_THRESHOLD")),
+    "RATE_OF_CHANGE_UPPER_THRESHOLD": None if getenv("RATE_OF_CHANGE_UPPER_THRESHOLD") is None else float(getenv("RATE_OF_CHANGE_UPPER_THRESHOLD")),
+    "RATE_OF_CHANGE_LOWER_THRESHOLD": None if getenv("RATE_OF_CHANGE_LOWER_THRESHOLD") is None else float(getenv("RATE_OF_CHANGE_LOWER_THRESHOLD")),
+    "OUTLIER_POLICY": getenv("OUTLIER_POLICY", "remove"),
+    "INPUT_DATA_LABEL": getenv("INPUT_DATA_LABEL", "temperature"),
+    "INPUT_TIME_LABEL": getenv("INPUT_TIME_LABEL", "timestamp"),
 }
