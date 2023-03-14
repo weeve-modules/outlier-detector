@@ -3,7 +3,7 @@
 |                |                                                                       |
 | -------------- | --------------------------------------------------------------------- |
 | Name           | Outlier Detector                                                      |
-| Version        | v2.0.0                                                                |
+| Version        | v2.0.1                                                                |
 | Dockerhub Link | [weevenetwork/outlier-detector](https://hub.docker.com/r/weevenetwork/outlier-detector) |
 | authors        | Jakub Grzelak                                                         |
 
